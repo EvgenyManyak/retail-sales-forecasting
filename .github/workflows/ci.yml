@@ -27,4 +27,4 @@ jobs:
           pip install -r requirements.txt
 
       - name: Smoke-тест — библиотеки импортируются
-        run: python -c "import pandas, numpy, matplotlib, statsmodels, sklearn, lightgbm; print('OK: imports')"
+        run: python -c "import pandas, numpy, matplotlib, statsmodels, sklearn, lightgbm; print('OK - imports')"
