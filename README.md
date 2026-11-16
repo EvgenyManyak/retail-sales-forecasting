@@ -1,0 +1,99 @@
+# retail-sales-forecasting
+
+Прогноз продаж на 28 дней вперёд (датасет M5 / Walmart) + ABC-анализ SKU + сценарное моделирование — учебный проект end-to-end на Python.
+
+**EN (short):** Learning project: retail sales forecasting on the M5 dataset, ABC/Pareto SKU analysis, and what-if scenario modeling. Documentation in Russian; code comments are mixed RU/EN.
+
+## Задача
+
+- **Прогноз:** дневные продажи (units) каждого товара в каждом магазине Walmart, горизонт — 28 дней.
+- **ABC-анализ:** какие SKU дают 80% продаж (группа A) и почему по ним нужен другой прогноз, чем по группе C.
+- **Сценарии:** что будет с выручкой при падении трафика на 20% или запуске промо на топ-SKU — коридор P10/P50/P90 вместо одной точки.
+
+## Датасет
+
+| Параметр | Значение |
+|---|---|
+| Источник | [M5 Forecasting — Accuracy, Kaggle](https://www.kaggle.com/competitions/m5-forecasting-accuracy) |
+| Кто предоставил | Walmart / Makridakis Open Forecasting Centre (MOFC) |
+| Период | продажи 2011-01-29 — 2016-05-22 (1 941 день в evaluation-файле), горизонт прогноза 28 дней |
+| Размерность | 3 049 товаров × 10 магазинов (3 штата: CA, TX, WI) = 30 490 временных рядов |
+| Экзогенные признаки | календарь (праздники, SNAP), цены по неделям, события |
+| Лицензия | Subject to Competition Rules (условия Kaggle). Данные в git **не включаются** — каждый скачивает их сам через `download_data.py` |
+
+## Как воспроизвести
+
+```bash
+# 1. Клонировать репозиторий
+git clone https://github.com/EvgenyManyak/retail-sales-forecasting
+cd retail-sales-forecasting
+
+# 2. Виртуальное окружение (нужен Python 3.10+)
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+
+# 3. Зависимости
+pip install -r requirements.txt
+
+# 4. Данные (нужны аккаунт Kaggle, API-токен и принятое соглашение на вкладке Rules)
+python download_data.py
+
+# 5. Ноутбуки
+jupyter lab
+```
+
+Как получить токен Kaggle: kaggle.com → аватар → Settings → раздел API → Create New Token (скачается `kaggle.json`) → положить файл в `~/.kaggle/`. Затем на странице соревнования открыть вкладку Rules → «I Understand and Accept».
+
+## Структура репозитория
+
+```
+m5-forecasting-abc/
+├── README.md               # этот файл: задача, датасет, результаты, роадмап
+├── CHANGELOG.md            # история изменений по этапам обучения
+├── LICENSE                 # MIT
+├── requirements.txt        # зависимости проекта
+├── .gitignore              # что не попадает в git (данные, кэш, секреты)
+├── download_data.py        # скачивание M5 с Kaggle — данные не хранятся в git
+├── data/
+│   ├── raw/                # сырые CSV с Kaggle — НЕ в git (см. .gitignore)
+│   └── processed/          # очищенные и агрегированные данные — НЕ в git
+├── notebooks/              # исследовательские ноутбуки по этапам (01_, 02_, ...)
+├── src/                    # переиспользуемый код пайплайна (появляется в этапах 5–9)
+│   ├── features.py         # лаги, скользящие статистики, календарные признаки
+│   ├── models.py           # базовые и ML-модели, схема валидации
+│   ├── abc.py              # ABC-классификация SKU
+│   └── scenarios.py        # сценарное моделирование
+├── tests/                  # pytest: детерминированность ABC, отсутствие утечек (этап 9)
+├── reports/                # РЕЗУЛЬТАТЫ — в git: таблицы ABC, кривая Парето, сценарии
+│   ├── figures/
+│   └── tables/
+└── .github/workflows/ci.yml  # GitHub Actions: автопроверка при каждом коммите
+```
+
+## Текущие результаты
+
+Обновляется по мере прохождения этапов. Валидация — на последних 28 днях истории, горизонт прогноза — 28 дней.
+
+| Модель | WAPE | MAE | RMSE | Статус |
+|---|---|---|---|---|
+| Наивный (значение 28 дней назад) | — | — | — | бейзлайн, этап 3 |
+| Holt-Winters | — | — | — | этап 3 |
+| LightGBM на лаговых признаках | — | — | — | этап 6 |
+
+## Роадмап
+
+- [x] Этап 1. Датасет, структура репозитория, git, первый CI
+- [ ] Этап 2. Разведочный анализ: стационарность, сезонность, ACF/PACF, декомпозиция
+- [ ] Этап 3. Базовые модели: наивные, скользящее среднее, Holt-Winters, SARIMA
+- [ ] Этап 4. Метрики и валидация для временных рядов (WAPE, time-based split, backtesting)
+- [ ] Этап 5. Feature engineering: лаги, календарь, циклические признаки
+- [ ] Этап 6. ML-модели: линейная регрессия, градиентный бустинг (direct vs recursive)
+- [ ] Этап 7. ABC-анализ SKU (плюс разрезы: магазины, категории)
+- [ ] Этап 8. Сценарное моделирование: base/optimistic/pessimistic, P10/P50/P90
+- [ ] Этап 9. Сборка пайплайна + тесты + расширенный CI (ruff, pytest)
+- [ ] Этап 10. Финальный проект и бизнес-выводы
+- [ ] Финальный полиш: ревью репозитория, теги и релиз
+
+## Лицензия
+
+Код — MIT. Данные M5 в репозиторий не входят и используются по правилам Kaggle.
