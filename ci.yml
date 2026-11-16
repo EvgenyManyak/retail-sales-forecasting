@@ -1,0 +1,30 @@
+# Минимальный CI: проверяем, что проект «живой» при каждом коммите.
+# Файл обязательно лежит в .github/workflows/ — иначе GitHub его не увидит.
+
+name: CI                       # имя workflow — оно показывается во вкладке Actions
+
+on:                            # когда запускать
+  push:                        # при каждом push в ветку main
+    branches: [main]
+  pull_request:                # и при открытии/обновлении pull request
+
+jobs:
+  smoke-test:                  # job №1 (имя произвольное)
+    runs-on: ubuntu-latest     # свежая виртуалка Ubuntu на серверах GitHub
+
+    steps:
+      - name: Забрать код репозитория
+        uses: actions/checkout@v4          # готовый экшен: клонирует репо на виртуалку
+
+      - name: Установить Python 3.11
+        uses: actions/setup-python@v5      # готовый экшен: ставит нужный Python
+        with:
+          python-version: "3.11"
+
+      - name: Установить зависимости
+        run: |                             # многострочная shell-команда
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Smoke-тест — библиотеки импортируются
+        run: python -c "import pandas, numpy, matplotlib, statsmodels, sklearn, lightgbm; print('OK: imports')"
