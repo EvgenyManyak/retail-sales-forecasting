@@ -6,6 +6,15 @@
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-11-23
+### Added
+- Ноутбук 04_baselines.ipynb: holdout 28 дней, наивные/скользящее среднее/Holt-Winters/SARIMA на CA_3
+- Упражнение WI_2: рейтинг моделей, эмпирическая проверка D=0 vs D=1
+- Артефакты: 04_models_*, 04_ex_wi2_* в reports/
+
+### Changed
+- README: роадмап перенумерован (этап 3 = стационарность), таблица результатов заполнена
+
 ## [0.4.1] — 2026-11-19
 ### Fixed
 - Исправлена опечатка в имени файла 03_stat_differencing_copmparison.png → comparison.
