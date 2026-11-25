@@ -47,7 +47,7 @@ jupyter lab
 ## Структура репозитория
 
 ```
-m5-forecasting-abc/
+retail-sales-forecasting/
 ├── README.md               # этот файл: задача, датасет, результаты, роадмап
 ├── CHANGELOG.md            # история изменений по этапам обучения
 ├── LICENSE                 # MIT
