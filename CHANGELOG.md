@@ -6,6 +6,12 @@
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-11-25
+### Added
+- Ноутбук 05_metrics_backtesting.ipynb: MAE/RMSE/WAPE/MAPE/MASE, time-based split, backtesting 5 фолдов (5 моделей на CA_3), профиль ошибки по горизонту
+- Упражнение: backtest для TX_3 — holdout против скользящей валидации
+- Артефакты: 05_val_*, 05_ex_tx3_* в reports/
+
 ## [0.5.0] — 2026-11-23
 ### Added
 - Ноутбук 04_baselines.ipynb: holdout 28 дней, наивные/скользящее среднее/Holt-Winters/SARIMA на CA_3
